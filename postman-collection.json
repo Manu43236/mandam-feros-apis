@@ -1,0 +1,340 @@
+{
+  "info": {
+    "name": "FEROS API",
+    "description": "FEROS Operations Management - API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "vehicleTypeId",
+      "value": ""
+    },
+    {
+      "key": "vehicleMakeId",
+      "value": ""
+    },
+    {
+      "key": "vehicleModelId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Database",
+      "item": [
+        {
+          "name": "Get Database Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/database/info"
+          }
+        },
+        {
+          "name": "Get Table Names",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/database/tables"
+          }
+        },
+        {
+          "name": "Get All Tables Schema",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/schema/all-tables"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicle Types",
+      "item": [
+        {
+          "name": "List All Vehicle Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-types"
+          }
+        },
+        {
+          "name": "List Active Vehicle Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicle-types?activeOnly=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicle-types"],
+              "query": [{ "key": "activeOnly", "value": "true" }]
+            }
+          }
+        },
+        {
+          "name": "Get Vehicle Type by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-types/{{vehicleTypeId}}"
+          }
+        },
+        {
+          "name": "Create Vehicle Type",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Truck\",\n  \"description\": \"Heavy goods vehicle\",\n  \"isActive\": true,\n  \"displayOrder\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicle-types"
+          }
+        },
+        {
+          "name": "Update Vehicle Type",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Truck\",\n  \"description\": \"Heavy goods vehicle\",\n  \"isActive\": true,\n  \"displayOrder\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicle-types/{{vehicleTypeId}}"
+          }
+        },
+        {
+          "name": "Deactivate Vehicle Type",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-types/{{vehicleTypeId}}"
+          }
+        },
+        {
+          "name": "Activate Vehicle Type",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-types/{{vehicleTypeId}}/activate"
+          }
+        },
+        {
+          "name": "Hard Delete Vehicle Type",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-types/{{vehicleTypeId}}/permanent"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicle Makes",
+      "item": [
+        {
+          "name": "List All Vehicle Makes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-makes"
+          }
+        },
+        {
+          "name": "List Active Vehicle Makes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicle-makes?activeOnly=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicle-makes"],
+              "query": [{ "key": "activeOnly", "value": "true" }]
+            }
+          }
+        },
+        {
+          "name": "Get Vehicle Make by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-makes/{{vehicleMakeId}}"
+          }
+        },
+        {
+          "name": "Create Vehicle Make",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tata Motors\",\n  \"country\": \"India\",\n  \"isActive\": true,\n  \"displayOrder\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicle-makes"
+          }
+        },
+        {
+          "name": "Update Vehicle Make",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tata Motors\",\n  \"country\": \"India\",\n  \"isActive\": true,\n  \"displayOrder\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicle-makes/{{vehicleMakeId}}"
+          }
+        },
+        {
+          "name": "Deactivate Vehicle Make",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-makes/{{vehicleMakeId}}"
+          }
+        },
+        {
+          "name": "Activate Vehicle Make",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-makes/{{vehicleMakeId}}/activate"
+          }
+        },
+        {
+          "name": "Hard Delete Vehicle Make",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-makes/{{vehicleMakeId}}/permanent"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicle Models",
+      "item": [
+        {
+          "name": "List All Vehicle Models",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-models"
+          }
+        },
+        {
+          "name": "List Active Vehicle Models",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicle-models?activeOnly=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicle-models"],
+              "query": [{ "key": "activeOnly", "value": "true" }]
+            }
+          }
+        },
+        {
+          "name": "List Vehicle Models by Make",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicle-models?makeId={{vehicleMakeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicle-models"],
+              "query": [{ "key": "makeId", "value": "{{vehicleMakeId}}" }]
+            }
+          }
+        },
+        {
+          "name": "List Vehicle Models by Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicle-models?vehicleTypeId={{vehicleTypeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicle-models"],
+              "query": [{ "key": "vehicleTypeId", "value": "{{vehicleTypeId}}" }]
+            }
+          }
+        },
+        {
+          "name": "Get Vehicle Model by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-models/{{vehicleModelId}}"
+          }
+        },
+        {
+          "name": "Create Vehicle Model",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"407\",\n  \"make\": { \"id\": \"{{vehicleMakeId}}\" },\n  \"vehicleType\": { \"id\": \"{{vehicleTypeId}}\" },\n  \"typicalCapacityTons\": 9.5,\n  \"typicalTyreCount\": 12,\n  \"isActive\": true,\n  \"displayOrder\": 0\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicle-models"
+          }
+        },
+        {
+          "name": "Update Vehicle Model",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"407\",\n  \"make\": { \"id\": \"{{vehicleMakeId}}\" },\n  \"vehicleType\": { \"id\": \"{{vehicleTypeId}}\" },\n  \"typicalCapacityTons\": 9.5,\n  \"typicalTyreCount\": 12,\n  \"isActive\": true,\n  \"displayOrder\": 0\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicle-models/{{vehicleModelId}}"
+          }
+        },
+        {
+          "name": "Deactivate Vehicle Model",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-models/{{vehicleModelId}}"
+          }
+        },
+        {
+          "name": "Activate Vehicle Model",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-models/{{vehicleModelId}}/activate"
+          }
+        },
+        {
+          "name": "Hard Delete Vehicle Model",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-models/{{vehicleModelId}}/permanent"
+          }
+        }
+      ]
+    }
+  ]
+}
