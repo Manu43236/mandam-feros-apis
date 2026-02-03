@@ -3,6 +3,8 @@ package com.api.feros.service;
 import com.api.feros.entity.VehicleType;
 import com.api.feros.repository.VehicleTypeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,12 +17,14 @@ public class VehicleTypeService {
 
     private final VehicleTypeRepository vehicleTypeRepository;
 
-    // Get all vehicle types
+    public Page<VehicleType> getAllVehicleTypesPaged(boolean activeOnly, Pageable pageable) {
+        return activeOnly ? vehicleTypeRepository.findByIsActiveTrueOrderByDisplayOrderAsc(pageable) : vehicleTypeRepository.findAllByOrderByDisplayOrderAsc(pageable);
+    }
+
     public List<VehicleType> getAllVehicleTypes() {
         return vehicleTypeRepository.findAll();
     }
 
-    // Get all active vehicle types (sorted by display order)
     public List<VehicleType> getAllActiveVehicleTypes() {
         return vehicleTypeRepository.findByIsActiveTrueOrderByDisplayOrderAsc();
     }

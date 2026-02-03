@@ -1,34 +1,35 @@
 package com.api.feros.controller;
 
-import com.api.feros.entity.VehicleMake;
-import com.api.feros.service.VehicleMakeService;
+import com.api.feros.entity.AppUser;
+import com.api.feros.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/vehicle-makes")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
-public class VehicleMakeController {
+public class UserController {
 
-    private final VehicleMakeService vehicleMakeService;
+    private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllVehicleMakes(
+    public ResponseEntity<Map<String, Object>> getAllUsers(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "clientId", required = false) String clientId,
             @RequestParam(value = "activeOnly", required = false, defaultValue = "false") boolean activeOnly,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "12") int size) {
         Map<String, Object> response = new HashMap<>();
         try {
             org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
-            var paged = vehicleMakeService.getAllVehicleMakesPaged(activeOnly, pageable);
+            var paged = userService.getAllUsersWithSearchAndFilters(search, clientId, activeOnly, pageable);
             response.put("success", true);
-            response.put("message", "Vehicle makes retrieved successfully");
+            response.put("message", "Users retrieved successfully");
             response.put("data", paged.getContent());
             response.put("totalElements", paged.getTotalElements());
             response.put("totalPages", paged.getTotalPages());
@@ -37,20 +38,20 @@ public class VehicleMakeController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.put("success", false);
-            response.put("message", "Error retrieving vehicle makes: " + e.getMessage());
+            response.put("message", "Error retrieving users: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getVehicleMakeById(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> getUserById(@PathVariable String id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            VehicleMake vehicleMake = vehicleMakeService.getVehicleMakeById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Vehicle make not found with id: " + id));
+            AppUser user = userService.getUserById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
             response.put("success", true);
-            response.put("message", "Vehicle make retrieved successfully");
-            response.put("data", vehicleMake);
+            response.put("message", "User retrieved successfully");
+            response.put("data", user);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             response.put("success", false);
@@ -58,18 +59,18 @@ public class VehicleMakeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.put("success", false);
-            response.put("message", "Error retrieving vehicle make: " + e.getMessage());
+            response.put("message", "Error retrieving user: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createVehicleMake(@RequestBody VehicleMake vehicleMake) {
+    public ResponseEntity<Map<String, Object>> createUser(@RequestBody AppUser user) {
         Map<String, Object> response = new HashMap<>();
         try {
-            VehicleMake created = vehicleMakeService.createVehicleMake(vehicleMake);
+            AppUser created = userService.createUser(user);
             response.put("success", true);
-            response.put("message", "Vehicle make created successfully");
+            response.put("message", "User created successfully");
             response.put("data", created);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
@@ -78,20 +79,20 @@ public class VehicleMakeController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
             response.put("success", false);
-            response.put("message", "Error creating vehicle make: " + e.getMessage());
+            response.put("message", "Error creating user: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updateVehicleMake(
+    public ResponseEntity<Map<String, Object>> updateUser(
             @PathVariable String id,
-            @RequestBody VehicleMake vehicleMake) {
+            @RequestBody AppUser user) {
         Map<String, Object> response = new HashMap<>();
         try {
-            VehicleMake updated = vehicleMakeService.updateVehicleMake(id, vehicleMake);
+            AppUser updated = userService.updateUser(id, user);
             response.put("success", true);
-            response.put("message", "Vehicle make updated successfully");
+            response.put("message", "User updated successfully");
             response.put("data", updated);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
@@ -100,18 +101,56 @@ public class VehicleMakeController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
             response.put("success", false);
-            response.put("message", "Error updating vehicle make: " + e.getMessage());
+            response.put("message", "Error updating user: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PatchMapping("/{id}/archive")
+    public ResponseEntity<Map<String, Object>> archiveUser(@PathVariable String id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            userService.archiveUser(id);
+            response.put("success", true);
+            response.put("message", "User archived successfully");
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error archiving user: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PatchMapping("/{id}/unarchive")
+    public ResponseEntity<Map<String, Object>> unarchiveUser(@PathVariable String id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            userService.unarchiveUser(id);
+            response.put("success", true);
+            response.put("message", "User unarchived successfully");
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error unarchiving user: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteVehicleMake(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable String id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            vehicleMakeService.deleteVehicleMake(id);
+            userService.deleteUser(id);
             response.put("success", true);
-            response.put("message", "Vehicle make deactivated successfully");
+            response.put("message", "User deleted successfully");
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             response.put("success", false);
@@ -119,46 +158,7 @@ public class VehicleMakeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.put("success", false);
-            response.put("message", "Error deleting vehicle make: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
-    @PatchMapping("/{id}/activate")
-    public ResponseEntity<Map<String, Object>> activateVehicleMake(@PathVariable String id) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            VehicleMake activated = vehicleMakeService.activateVehicleMake(id);
-            response.put("success", true);
-            response.put("message", "Vehicle make activated successfully");
-            response.put("data", activated);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            response.put("success", false);
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Error activating vehicle make: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
-    @DeleteMapping("/{id}/permanent")
-    public ResponseEntity<Map<String, Object>> hardDeleteVehicleMake(@PathVariable String id) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            vehicleMakeService.hardDeleteVehicleMake(id);
-            response.put("success", true);
-            response.put("message", "Vehicle make deleted permanently");
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            response.put("success", false);
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Error deleting vehicle make: " + e.getMessage());
+            response.put("message", "Error deleting user: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

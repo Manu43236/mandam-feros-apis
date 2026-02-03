@@ -1,13 +1,19 @@
 {
   "info": {
     "name": "FEROS API",
-    "description": "FEROS Operations Management - API Collection",
+    "description": "FEROS Operations Management - API Collection. Use Auth > Login first, then set collection variables accessToken (and optionally refreshToken). Protected endpoints use Bearer token. List APIs support pagination (page, size default 12) and search/filters; set collection variables page and size to change page size.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{accessToken}}", "type": "string" }
+    ]
   },
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:8080"
+      "value": "http://localhost:8081"
     },
     {
       "key": "vehicleTypeId",
@@ -20,9 +26,100 @@
     {
       "key": "vehicleModelId",
       "value": ""
+    },
+    {
+      "key": "clientId",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "vehicleId",
+      "value": ""
+    },
+    {
+      "key": "connectionId",
+      "value": ""
+    },
+    {
+      "key": "orderId",
+      "value": ""
+    },
+    {
+      "key": "lorryReceiptId",
+      "value": ""
+    },
+    {
+      "key": "vehicleAssignmentId",
+      "value": ""
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    },
+    {
+      "key": "page",
+      "value": "0"
+    },
+    {
+      "key": "size",
+      "value": "12"
     }
   ],
   "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (Email + Password)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        },
+        {
+          "name": "Login (Phone + PIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"9876543210\",\n  \"pin\": \"1234\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/refresh"
+          }
+        }
+      ]
+    },
     {
       "name": "Database",
       "item": [
@@ -56,23 +153,35 @@
       "name": "Vehicle Types",
       "item": [
         {
-          "name": "List All Vehicle Types",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": "{{baseUrl}}/api/vehicle-types"
-          }
-        },
-        {
-          "name": "List Active Vehicle Types",
+          "name": "List All Vehicle Types (paginated)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/vehicle-types?activeOnly=true",
+              "raw": "{{baseUrl}}/api/vehicle-types?page={{page}}&size={{size}}",
               "host": ["{{baseUrl}}"],
               "path": ["api", "vehicle-types"],
-              "query": [{ "key": "activeOnly", "value": "true" }]
+              "query": [
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Active Vehicle Types (paginated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicle-types?activeOnly=true&page={{page}}&size={{size}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicle-types"],
+              "query": [
+                { "key": "activeOnly", "value": "true" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
             }
           }
         },
@@ -142,23 +251,35 @@
       "name": "Vehicle Makes",
       "item": [
         {
-          "name": "List All Vehicle Makes",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": "{{baseUrl}}/api/vehicle-makes"
-          }
-        },
-        {
-          "name": "List Active Vehicle Makes",
+          "name": "List All Vehicle Makes (paginated)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/vehicle-makes?activeOnly=true",
+              "raw": "{{baseUrl}}/api/vehicle-makes?page={{page}}&size={{size}}",
               "host": ["{{baseUrl}}"],
               "path": ["api", "vehicle-makes"],
-              "query": [{ "key": "activeOnly", "value": "true" }]
+              "query": [
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Active Vehicle Makes (paginated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicle-makes?activeOnly=true&page={{page}}&size={{size}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicle-makes"],
+              "query": [
+                { "key": "activeOnly", "value": "true" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
             }
           }
         },
@@ -228,49 +349,37 @@
       "name": "Vehicle Models",
       "item": [
         {
-          "name": "List All Vehicle Models",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": "{{baseUrl}}/api/vehicle-models"
-          }
-        },
-        {
-          "name": "List Active Vehicle Models",
+          "name": "List All Vehicle Models (paginated)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/vehicle-models?activeOnly=true",
+              "raw": "{{baseUrl}}/api/vehicle-models?page={{page}}&size={{size}}",
               "host": ["{{baseUrl}}"],
               "path": ["api", "vehicle-models"],
-              "query": [{ "key": "activeOnly", "value": "true" }]
+              "query": [
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
             }
           }
         },
         {
-          "name": "List Vehicle Models by Make",
+          "name": "List Vehicle Models (filters + pagination)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/vehicle-models?makeId={{vehicleMakeId}}",
+              "raw": "{{baseUrl}}/api/vehicle-models?activeOnly=false&makeId={{vehicleMakeId}}&vehicleTypeId={{vehicleTypeId}}&page={{page}}&size={{size}}",
               "host": ["{{baseUrl}}"],
               "path": ["api", "vehicle-models"],
-              "query": [{ "key": "makeId", "value": "{{vehicleMakeId}}" }]
-            }
-          }
-        },
-        {
-          "name": "List Vehicle Models by Type",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/vehicle-models?vehicleTypeId={{vehicleTypeId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "vehicle-models"],
-              "query": [{ "key": "vehicleTypeId", "value": "{{vehicleTypeId}}" }]
+              "query": [
+                { "key": "activeOnly", "value": "false" },
+                { "key": "makeId", "value": "{{vehicleMakeId}}" },
+                { "key": "vehicleTypeId", "value": "{{vehicleTypeId}}" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
             }
           }
         },
@@ -332,6 +441,608 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/api/vehicle-models/{{vehicleModelId}}/permanent"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clients",
+      "item": [
+        {
+          "name": "List Clients (search + pagination)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients?search=&status=&page={{page}}&size={{size}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients"],
+              "query": [
+                { "key": "search", "value": "", "description": "Search by company or contact name" },
+                { "key": "status", "value": "" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Client by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/clients/{{clientId}}"
+          }
+        },
+        {
+          "name": "Create Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companyTradeName\": \"Acme Transport Ltd\",\n  \"businessType\": \"TRANSPORTER\",\n  \"hqCity\": \"Mumbai\",\n  \"hqState\": \"Maharashtra\",\n  \"primaryContactName\": \"John Doe\",\n  \"primaryPhone\": \"9876543210\",\n  \"primaryEmail\": \"john@acme.com\",\n  \"documentSeries\": {},\n  \"subscription\": {}\n}"
+            },
+            "url": "{{baseUrl}}/api/clients"
+          }
+        },
+        {
+          "name": "Update Client",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companyTradeName\": \"Acme Transport Ltd\",\n  \"businessType\": \"TRANSPORTER\",\n  \"hqCity\": \"Mumbai\",\n  \"hqState\": \"Maharashtra\",\n  \"primaryContactName\": \"John Doe\",\n  \"primaryPhone\": \"9876543210\",\n  \"primaryEmail\": \"john@acme.com\",\n  \"status\": \"Active\",\n  \"documentSeries\": {},\n  \"subscription\": {}\n}"
+            },
+            "url": "{{baseUrl}}/api/clients/{{clientId}}"
+          }
+        },
+        {
+          "name": "Delete Client",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/clients/{{clientId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Connections",
+      "item": [
+        {
+          "name": "List Connections (search + pagination)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/connections?search=&clientId={{clientId}}&activeOnly=false&status=&page={{page}}&size={{size}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "connections"],
+              "query": [
+                { "key": "search", "value": "", "description": "Search by connection name" },
+                { "key": "clientId", "value": "{{clientId}}" },
+                { "key": "activeOnly", "value": "false" },
+                { "key": "status", "value": "" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Connection by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/connections/{{connectionId}}"
+          }
+        },
+        {
+          "name": "Create Connection",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client\": { \"id\": \"{{clientId}}\" },\n  \"name\": \"ABC Transport Co\",\n  \"addressText\": \"123 Main St, City\",\n  \"phone\": \"9876543210\",\n  \"email\": \"contact@abctransport.com\",\n  \"gstNumber\": \"29AABCT1234A1Z5\",\n  \"pan\": \"AABCT1234A\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": "{{baseUrl}}/api/connections"
+          }
+        },
+        {
+          "name": "Update Connection",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client\": { \"id\": \"{{clientId}}\" },\n  \"name\": \"ABC Transport Co\",\n  \"addressText\": \"123 Main St, City\",\n  \"phone\": \"9876543210\",\n  \"email\": \"contact@abctransport.com\",\n  \"gstNumber\": \"29AABCT1234A1Z5\",\n  \"pan\": \"AABCT1234A\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": "{{baseUrl}}/api/connections/{{connectionId}}"
+          }
+        },
+        {
+          "name": "Archive Connection",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/api/connections/{{connectionId}}/archive"
+          }
+        },
+        {
+          "name": "Unarchive Connection",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/api/connections/{{connectionId}}/unarchive"
+          }
+        },
+        {
+          "name": "Delete Connection",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/connections/{{connectionId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "List Orders (search + pagination)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/orders?search=&clientId={{clientId}}&status=&connectionId={{connectionId}}&fromDate=&toDate=&page={{page}}&size={{size}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders"],
+              "query": [
+                { "key": "search", "value": "", "description": "Search by order/reference number" },
+                { "key": "clientId", "value": "{{clientId}}" },
+                { "key": "status", "value": "" },
+                { "key": "connectionId", "value": "{{connectionId}}" },
+                { "key": "fromDate", "value": "" },
+                { "key": "toDate", "value": "" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/orders/{{orderId}}"
+          }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client\": { \"id\": \"{{clientId}}\" },\n  \"connection\": { \"id\": \"{{connectionId}}\" },\n  \"pickupLocation\": \"Warehouse A, City\",\n  \"dropLocation\": \"Site B, City\",\n  \"material\": \"Cement\",\n  \"totalQuantity\": 20.50,\n  \"unit\": \"TONS\",\n  \"rateType\": \"PER_QUANTITY\",\n  \"rateValue\": 500.00,\n  \"orderDate\": \"2026-02-01\",\n  \"expectedPickupDate\": \"2026-02-02\",\n  \"expectedDeliveryDate\": \"2026-02-03\",\n  \"referenceNo\": \"REF-001\",\n  \"notes\": \"Handle with care\",\n  \"status\": \"DRAFT\"\n}"
+            },
+            "url": "{{baseUrl}}/api/orders"
+          }
+        },
+        {
+          "name": "Update Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client\": { \"id\": \"{{clientId}}\" },\n  \"connection\": { \"id\": \"{{connectionId}}\" },\n  \"pickupLocation\": \"Warehouse A, City\",\n  \"dropLocation\": \"Site B, City\",\n  \"material\": \"Cement\",\n  \"totalQuantity\": 20.50,\n  \"unit\": \"TONS\",\n  \"rateType\": \"PER_QUANTITY\",\n  \"rateValue\": 500.00,\n  \"orderDate\": \"2026-02-01\",\n  \"expectedPickupDate\": \"2026-02-02\",\n  \"expectedDeliveryDate\": \"2026-02-03\",\n  \"referenceNo\": \"REF-001\",\n  \"notes\": \"Handle with care\",\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": "{{baseUrl}}/api/orders/{{orderId}}"
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": "{{baseUrl}}/api/orders/{{orderId}}/status"
+          }
+        },
+        {
+          "name": "Delete Order",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/orders/{{orderId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lorry Receipts",
+      "item": [
+        {
+          "name": "List Lorry Receipts (filters + pagination)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/lorry-receipts?clientId={{clientId}}&status=&orderId={{orderId}}&assignmentId=&fromDate=&toDate=&page={{page}}&size={{size}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "lorry-receipts"],
+              "query": [
+                { "key": "clientId", "value": "{{clientId}}" },
+                { "key": "status", "value": "" },
+                { "key": "orderId", "value": "{{orderId}}" },
+                { "key": "assignmentId", "value": "" },
+                { "key": "fromDate", "value": "" },
+                { "key": "toDate", "value": "" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get LR by Assignment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/lorry-receipts?assignmentId={{vehicleAssignmentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "lorry-receipts"],
+              "query": [{ "key": "assignmentId", "value": "{{vehicleAssignmentId}}" }]
+            }
+          }
+        },
+        {
+          "name": "Get Lorry Receipt by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/lorry-receipts/{{lorryReceiptId}}"
+          }
+        },
+        {
+          "name": "Create Lorry Receipt",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assignment\": { \"id\": \"{{vehicleAssignmentId}}\" },\n  \"order\": { \"id\": \"{{orderId}}\" },\n  \"vehicle\": { \"id\": \"{{vehicleId}}\" },\n  \"driver\": { \"id\": \"{{userId}}\" },\n  \"connection\": { \"id\": \"{{connectionId}}\" },\n  \"lrNumber\": \"LR-001\",\n  \"pickupLocation\": \"Warehouse A\",\n  \"dropLocation\": \"Site B\",\n  \"material\": \"Cement\",\n  \"loadedQuantity\": 20.00,\n  \"unit\": \"TONS\",\n  \"rateType\": \"PER_QUANTITY\",\n  \"rateValue\": 500.00,\n  \"freightAmount\": 10000.00,\n  \"totalAmount\": 10000.00,\n  \"lrDate\": \"2026-02-01\",\n  \"loadingDate\": \"2026-02-01\",\n  \"expectedDeliveryDate\": \"2026-02-03\",\n  \"status\": \"CREATED\"\n}"
+            },
+            "url": "{{baseUrl}}/api/lorry-receipts"
+          }
+        },
+        {
+          "name": "Update Lorry Receipt",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lrNumber\": \"LR-001\",\n  \"pickupLocation\": \"Warehouse A\",\n  \"dropLocation\": \"Site B\",\n  \"material\": \"Cement\",\n  \"loadedQuantity\": 20.00,\n  \"unit\": \"TONS\",\n  \"rateType\": \"PER_QUANTITY\",\n  \"rateValue\": 500.00,\n  \"freightAmount\": 10000.00,\n  \"totalAmount\": 10000.00,\n  \"lrDate\": \"2026-02-01\",\n  \"loadingDate\": \"2026-02-01\",\n  \"expectedDeliveryDate\": \"2026-02-03\",\n  \"status\": \"LOADED\"\n}"
+            },
+            "url": "{{baseUrl}}/api/lorry-receipts/{{lorryReceiptId}}"
+          }
+        },
+        {
+          "name": "Update Lorry Receipt Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"DELIVERED\"\n}"
+            },
+            "url": "{{baseUrl}}/api/lorry-receipts/{{lorryReceiptId}}/status"
+          }
+        },
+        {
+          "name": "Delete Lorry Receipt",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/lorry-receipts/{{lorryReceiptId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicle Assignments",
+      "item": [
+        {
+          "name": "List Assignments (filters + pagination)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicle-assignments?clientId={{clientId}}&status=&orderId={{orderId}}&vehicleId={{vehicleId}}&driverId={{userId}}&page={{page}}&size={{size}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicle-assignments"],
+              "query": [
+                { "key": "clientId", "value": "{{clientId}}" },
+                { "key": "status", "value": "" },
+                { "key": "orderId", "value": "{{orderId}}" },
+                { "key": "vehicleId", "value": "{{vehicleId}}" },
+                { "key": "driverId", "value": "{{userId}}" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Assignment by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-assignments/{{vehicleAssignmentId}}"
+          }
+        },
+        {
+          "name": "Create Assignment (Order → Vehicle → Driver)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order\": { \"id\": \"{{orderId}}\" },\n  \"vehicle\": { \"id\": \"{{vehicleId}}\" },\n  \"driver\": { \"id\": \"{{userId}}\" },\n  \"plannedQuantity\": 20.50,\n  \"unit\": \"TONS\",\n  \"expectedDate\": \"2026-02-03\",\n  \"notes\": \"Priority delivery\",\n  \"status\": \"ASSIGNED\"\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicle-assignments"
+          }
+        },
+        {
+          "name": "Update Assignment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order\": { \"id\": \"{{orderId}}\" },\n  \"vehicle\": { \"id\": \"{{vehicleId}}\" },\n  \"driver\": { \"id\": \"{{userId}}\" },\n  \"plannedQuantity\": 20.50,\n  \"unit\": \"TONS\",\n  \"expectedDate\": \"2026-02-03\",\n  \"notes\": \"Priority delivery\",\n  \"status\": \"ASSIGNED\"\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicle-assignments/{{vehicleAssignmentId}}"
+          }
+        },
+        {
+          "name": "Update Assignment Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"COMPLETED\"\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicle-assignments/{{vehicleAssignmentId}}/status"
+          }
+        },
+        {
+          "name": "Delete Assignment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicle-assignments/{{vehicleAssignmentId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List Users (search + pagination)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users?search=&clientId={{clientId}}&activeOnly=false&page={{page}}&size={{size}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"],
+              "query": [
+                { "key": "search", "value": "", "description": "Search by name, email or phone" },
+                { "key": "clientId", "value": "{{clientId}}" },
+                { "key": "activeOnly", "value": "false" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client\": { \"id\": \"{{clientId}}\" },\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"phone\": \"9876543210\",\n  \"role\": \"CLIENT_ADMIN\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users"
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client\": { \"id\": \"{{clientId}}\" },\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"9876543210\",\n  \"role\": \"CLIENT_ADMIN\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Update User Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client\": { \"id\": \"{{clientId}}\" },\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"NewSecurePass123!\",\n  \"phone\": \"9876543210\",\n  \"role\": \"CLIENT_ADMIN\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Archive User",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/{{userId}}/archive"
+          }
+        },
+        {
+          "name": "Unarchive User",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/{{userId}}/unarchive"
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicles",
+      "item": [
+        {
+          "name": "List Vehicles (search + pagination)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles?search=&clientId={{clientId}}&activeOnly=false&status=&page={{page}}&size={{size}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles"],
+              "query": [
+                { "key": "search", "value": "", "description": "Search by number, chassis, make, model or type" },
+                { "key": "clientId", "value": "{{clientId}}" },
+                { "key": "activeOnly", "value": "false" },
+                { "key": "status", "value": "" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "size", "value": "{{size}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Vehicle by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
+          }
+        },
+        {
+          "name": "Create Vehicle",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client\": { \"id\": \"{{clientId}}\" },\n  \"vehicleNumber\": \"MH02AB1234\",\n  \"vehicleType\": { \"id\": \"{{vehicleTypeId}}\" },\n  \"make\": { \"id\": \"{{vehicleMakeId}}\" },\n  \"model\": { \"id\": \"{{vehicleModelId}}\" },\n  \"year\": 2022,\n  \"tyreCount\": 12,\n  \"capacityTons\": 9.5,\n  \"fuelType\": \"DIESEL\",\n  \"status\": \"AVAILABLE\"\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicles"
+          }
+        },
+        {
+          "name": "Update Vehicle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client\": { \"id\": \"{{clientId}}\" },\n  \"vehicleNumber\": \"MH02AB1234\",\n  \"vehicleType\": { \"id\": \"{{vehicleTypeId}}\" },\n  \"make\": { \"id\": \"{{vehicleMakeId}}\" },\n  \"model\": { \"id\": \"{{vehicleModelId}}\" },\n  \"year\": 2022,\n  \"tyreCount\": 12,\n  \"capacityTons\": 9.5,\n  \"fuelType\": \"DIESEL\",\n  \"status\": \"AVAILABLE\"\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
+          }
+        },
+        {
+          "name": "Archive Vehicle",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/archive"
+          }
+        },
+        {
+          "name": "Unarchive Vehicle",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/unarchive"
+          }
+        },
+        {
+          "name": "Delete Vehicle",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
           }
         }
       ]

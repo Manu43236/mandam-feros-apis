@@ -7,6 +7,8 @@ import com.api.feros.repository.VehicleModelRepository;
 import com.api.feros.repository.VehicleMakeRepository;
 import com.api.feros.repository.VehicleTypeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,10 @@ public class VehicleModelService {
     private final VehicleModelRepository vehicleModelRepository;
     private final VehicleMakeRepository vehicleMakeRepository;
     private final VehicleTypeRepository vehicleTypeRepository;
+
+    public Page<VehicleModel> getAllVehicleModelsPaged(boolean activeOnly, String makeId, String vehicleTypeId, Pageable pageable) {
+        return vehicleModelRepository.findAllWithFilters(activeOnly, makeId, vehicleTypeId, pageable);
+    }
 
     public List<VehicleModel> getAllVehicleModels() {
         return vehicleModelRepository.findAllWithMakeAndType();

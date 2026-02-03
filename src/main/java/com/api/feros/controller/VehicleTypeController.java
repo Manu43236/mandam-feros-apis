@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -18,24 +17,22 @@ public class VehicleTypeController {
 
     private final VehicleTypeService vehicleTypeService;
 
-    // Get all vehicle types
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllVehicleTypes(
-            @RequestParam(value = "activeOnly", required = false, defaultValue = "false") boolean activeOnly) {
-        
+            @RequestParam(value = "activeOnly", required = false, defaultValue = "false") boolean activeOnly,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "12") int size) {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<VehicleType> vehicleTypes;
-            if (activeOnly) {
-                vehicleTypes = vehicleTypeService.getAllActiveVehicleTypes();
-            } else {
-                vehicleTypes = vehicleTypeService.getAllVehicleTypes();
-            }
-            
+            org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+            var paged = vehicleTypeService.getAllVehicleTypesPaged(activeOnly, pageable);
             response.put("success", true);
             response.put("message", "Vehicle types retrieved successfully");
-            response.put("data", vehicleTypes);
-            response.put("count", vehicleTypes.size());
+            response.put("data", paged.getContent());
+            response.put("totalElements", paged.getTotalElements());
+            response.put("totalPages", paged.getTotalPages());
+            response.put("currentPage", paged.getNumber());
+            response.put("pageSize", paged.getSize());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.put("success", false);

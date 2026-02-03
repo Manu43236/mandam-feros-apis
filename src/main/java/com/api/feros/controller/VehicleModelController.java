@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,24 +21,20 @@ public class VehicleModelController {
     public ResponseEntity<Map<String, Object>> getAllVehicleModels(
             @RequestParam(value = "activeOnly", required = false, defaultValue = "false") boolean activeOnly,
             @RequestParam(value = "makeId", required = false) String makeId,
-            @RequestParam(value = "vehicleTypeId", required = false) String vehicleTypeId) {
-
+            @RequestParam(value = "vehicleTypeId", required = false) String vehicleTypeId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "12") int size) {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<VehicleModel> vehicleModels;
-            if (makeId != null && !makeId.isEmpty()) {
-                vehicleModels = vehicleModelService.getVehicleModelsByMakeId(makeId);
-            } else if (vehicleTypeId != null && !vehicleTypeId.isEmpty()) {
-                vehicleModels = vehicleModelService.getVehicleModelsByVehicleTypeId(vehicleTypeId);
-            } else if (activeOnly) {
-                vehicleModels = vehicleModelService.getAllActiveVehicleModels();
-            } else {
-                vehicleModels = vehicleModelService.getAllVehicleModels();
-            }
+            org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+            var paged = vehicleModelService.getAllVehicleModelsPaged(activeOnly, makeId, vehicleTypeId, pageable);
             response.put("success", true);
             response.put("message", "Vehicle models retrieved successfully");
-            response.put("data", vehicleModels);
-            response.put("count", vehicleModels.size());
+            response.put("data", paged.getContent());
+            response.put("totalElements", paged.getTotalElements());
+            response.put("totalPages", paged.getTotalPages());
+            response.put("currentPage", paged.getNumber());
+            response.put("pageSize", paged.getSize());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.put("success", false);

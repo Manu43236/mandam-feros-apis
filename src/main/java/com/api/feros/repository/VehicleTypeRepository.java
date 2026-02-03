@@ -1,6 +1,8 @@
 package com.api.feros.repository;
 
 import com.api.feros.entity.VehicleType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,16 +11,16 @@ import java.util.Optional;
 
 @Repository
 public interface VehicleTypeRepository extends JpaRepository<VehicleType, String> {
-    
-    // Find all active vehicle types
+
     List<VehicleType> findByIsActiveTrueOrderByDisplayOrderAsc();
-    
-    // Find by name
+
+    Page<VehicleType> findByIsActiveTrueOrderByDisplayOrderAsc(Pageable pageable);
+
+    Page<VehicleType> findAllByOrderByDisplayOrderAsc(Pageable pageable);
+
     Optional<VehicleType> findByName(String name);
-    
-    // Find by name (case-insensitive)
+
     Optional<VehicleType> findByNameIgnoreCase(String name);
-    
-    // Check if name exists
+
     boolean existsByNameIgnoreCase(String name);
 }
