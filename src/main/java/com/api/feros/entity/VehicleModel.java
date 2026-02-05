@@ -1,5 +1,6 @@
 package com.api.feros.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,10 +27,12 @@ public class VehicleModel {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "make_id", nullable = false)
+    @JsonIgnore
     private VehicleMake make;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_type_id", nullable = false)
+    @JsonIgnore
     private VehicleType vehicleType;
 
     @Column(name = "typical_capacity_tons", precision = 10, scale = 2)
